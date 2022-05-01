@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
 class GeolocationService extends ChangeNotifier {
+  static const _defaultLatitude = 43.000441;
+  static const _defaultLongitude = -81.244823;
   StreamSubscription<Position>? positionStream;
-  String lattitude = "";
-  String longitude = "";
+  double latitude = _defaultLatitude;
+  double longitude = _defaultLongitude;
 
   GeolocationService();
 
@@ -74,8 +76,10 @@ class GeolocationService extends ChangeNotifier {
   }
 
   void _updatePositionAndNotify(Position? position) {
-    lattitude = position == null ? 'Unknown' : position.latitude.toString();
-    longitude = position == null ? 'Unknown' : position.longitude.toString();
-    notifyListeners();
+    if (position != null) {
+      latitude = position.latitude;
+      longitude = position.longitude;
+      notifyListeners();
+    }
   }
 }

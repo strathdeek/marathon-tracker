@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:marathon_tracker/services/geolocation.dart';
-import 'package:marathon_tracker/views/gpsTest.dart';
-import 'package:marathon_tracker/views/homeScreen.dart';
+import 'package:marathon_tracker/views/home_screen.dart';
 import 'package:provider/provider.dart';
 
 void main() {
