@@ -2,27 +2,26 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:marathon_tracker/helpers/distance_helpers.dart';
 
 class GeolocationService extends ChangeNotifier {
-  static const _defaultLatitude = 43.000441;
-  static const _defaultLongitude = -81.244823;
   StreamSubscription<Position>? positionStream;
-  double latitude = _defaultLatitude;
-  double longitude = _defaultLongitude;
+
+  Position? currentPosition;
 
   GeolocationService();
 
   Future<void> determinePosition() async {
-    var hasPermissions = await _checkPermissions();
+    var hasPermissions = await _checkAndRequestPermissions();
 
     if (hasPermissions) {
       var position = await Geolocator.getCurrentPosition();
-      _updatePositionAndNotify(position);
+      _onNewGpsPosition(position);
     }
   }
 
-  void startLocationTrackingAsync() async {
-    var hasPermissions = await _checkPermissions();
+  void startLocationTracking() async {
+    var hasPermissions = await _checkAndRequestPermissions();
 
     if (hasPermissions) {
       const LocationSettings locationSettings = LocationSettings(
@@ -31,7 +30,7 @@ class GeolocationService extends ChangeNotifier {
       );
 
       positionStream = Geolocator.getPositionStream(locationSettings: locationSettings).listen((Position? position) {
-        _updatePositionAndNotify(position);
+        _onNewGpsPosition(position);
       });
     }
   }
@@ -41,7 +40,7 @@ class GeolocationService extends ChangeNotifier {
   }
 
   // returns true if the proper permissions have been granted, error otherwise
-  Future<bool> _checkPermissions() async {
+  Future<bool> _checkAndRequestPermissions() async {
     bool serviceEnabled;
     LocationPermission permission;
 
@@ -75,11 +74,14 @@ class GeolocationService extends ChangeNotifier {
     return true;
   }
 
-  void _updatePositionAndNotify(Position? position) {
+  void _onNewGpsPosition(Position? position) {
     if (position != null) {
-      latitude = position.latitude;
-      longitude = position.longitude;
+      _updateCurrentPosition(position);
       notifyListeners();
     }
+  }
+
+  void _updateCurrentPosition(Position position) {
+    currentPosition = position;
   }
 }

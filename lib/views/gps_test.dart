@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:marathon_tracker/services/geolocation.dart';
+import 'package:marathon_tracker/services/geolocation_service.dart';
 import 'package:provider/provider.dart';
 
 class GpsTest extends StatefulWidget {
@@ -58,7 +58,7 @@ class _GpsTestState extends State<GpsTest> {
                 onPressed: () => context.read<GeolocationService>().determinePosition(),
                 child: const Text("Ping Location")),
             ElevatedButton(
-                onPressed: () => context.read<GeolocationService>().startLocationTrackingAsync(),
+                onPressed: () => context.read<GeolocationService>().startLocationTracking(),
                 child: const Text("Track")),
             ElevatedButton(
                 onPressed: () => context.read<GeolocationService>().stopLocationTracking(), child: const Text("Stop")),
